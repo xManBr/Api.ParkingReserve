@@ -16,109 +16,66 @@ namespace Api.ParkingReserve.Controllers
     [ApiController]
     public class EstacionamentoController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
+        public IEstacionamentoService _estacionamentoService { get; }
 
-        public EstacionamentoController(IConfiguration configuration)
+        public EstacionamentoController(IEstacionamentoService estacionamentoService)
         {
-            this._configuration = configuration;
+            _estacionamentoService = estacionamentoService;
         }
 
         [HttpGet]
-        public JsonResult Get()
+        public ActionResult<List<Estacionamento>> Get()
         {
-            MongoClient dbClient = new MongoClient(_configuration.GetConnectionString("parking-reserve-dev"));
-
-            var list = dbClient.GetDatabase("bertioga-dev").GetCollection<Estacionamento>("Estacionamento").AsQueryable();
-
-            return new JsonResult(list);
-
+            return _estacionamentoService.Consultar();
         }
 
         [HttpGet("{id}")]
-        public JsonResult Get(string id)
+        public ActionResult<Estacionamento> Get(string id)
         {
-            MongoClient dbClient = new MongoClient(_configuration.GetConnectionString("parking-reserve-dev"));
-
-            var filter = Builders<Estacionamento>.Filter.Eq("idEstacionamento", id);
-
-            var list = dbClient.GetDatabase("bertioga-dev").GetCollection<Estacionamento>("Estacionamento").Find(filter).FirstOrDefault();
-
-            if  (list == null)
+            var est = _estacionamentoService.Consultar(id);
+            if (est == null)
             {
-                return new JsonResult("ATENÇÃO --> NENHUM REGISTRO ENCONTRADO");
+                return NotFound($"Estacionamento id: {id} não encontrado");
             }
-            else
-            {
-                return new JsonResult(list);
-            }            
+            return est;
         }
 
         [HttpPost]
-        public JsonResult Post(Estacionamento estacionamento)
+        public ActionResult<Estacionamento> Post([FromBody] Estacionamento estacionamento)
         {
-            Guid g = Guid.NewGuid();
-            estacionamento.idEstacionamento = g.ToString();
+            _estacionamentoService.Cadastrar(estacionamento);
 
-            MongoClient dbClient = new MongoClient(_configuration.GetConnectionString("parking-reserve-dev"));
-            dbClient.GetDatabase("bertioga-dev").GetCollection<Estacionamento>("Estacionamento").InsertOne(estacionamento);
-
-            return new JsonResult("Inserido com sucesso idEstacionamento " + estacionamento.idEstacionamento);
+            return CreatedAtAction(nameof(Get), new { id = estacionamento.idEstacionamento }, estacionamento);
         }
 
-        [HttpPut]
-        public JsonResult Put(Estacionamento e)
+        [HttpPut("{id}")]
+        public ActionResult Put(string id, [FromBody] Estacionamento estacionamento)
         {
-            MongoClient dbClient = new MongoClient(_configuration.GetConnectionString("parking-reserve-dev"));
+            var existe = _estacionamentoService.Consultar(id);
 
-            var filter = Builders<Estacionamento>.Filter.Eq("idEstacionamento", e.idEstacionamento);
-
-            var update = Builders<Estacionamento>.Update
-                .Set("email", e.email)
-                .Set("telefone", e.telefone)
-                .Set("cnpj", e.cnpj)
-                .Set("nome", e.nome)
-                .Set("cep", e.cep)
-                .Set("idUsuario", e.idUsuario)
-                .Set("manobrista", e.manobrista)
-                .Set("manobrista", e.manobrista)
-                .Set("latitude", e.latitude)
-                .Set("longitude", e.longitude)
-                .Set("situacao", e.situacao)
-                .Set("dataCadastro", e.dataCadastro)
-                .Set("dataCredeciamento", e.dataCredeciamento);
-
-           var result =  dbClient.GetDatabase("bertioga-dev").GetCollection<Estacionamento>("Estacionamento").UpdateOne(filter, update);
-
-         
-            if (result.ModifiedCount > 0)
+            if (existe == null)
             {
-                return new  JsonResult("Alterado com sucesso idEstacionamento " + e.idEstacionamento);
-
-            }
-            else
-            {
-                return new JsonResult("ATENÇÃO --> NENHUM REGISTRO ALTERADO");
+                return NotFound($"Estacionamento id: {id} não encontrado");
             }
 
+            _estacionamentoService.Alterar(id, estacionamento);
+
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public JsonResult Delete(string id)
+        public ActionResult Delete(string id)
         {
-            MongoClient dbClient = new MongoClient(_configuration.GetConnectionString("parking-reserve-dev"));
+            var existe = _estacionamentoService.Consultar(id);
 
-            var filter = Builders<Estacionamento>.Filter.Eq("idEstacionamento", id);
-
-            var result = dbClient.GetDatabase("bertioga-dev").GetCollection<Estacionamento>("Estacionamento").DeleteOne(filter);
-
-            if (result.DeletedCount > 0)
+            if (existe == null)
             {
-                return new JsonResult("Deletado com sucesso idEstacionamento " + id);
+                return NotFound($"Estacionamento id: {id} não encontrado");
             }
-            else
-            {
-                return new JsonResult("ATENÇÃO --> NENHUM REGISTRO DELETADO");
-            }
+
+            _estacionamentoService.Deletar(id);
+
+            return Ok($"Estacionamento {id} Deletado!");
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace Api.ParkingReserve.Models
     [BsonIgnoreExtraElements]
     public class Vaga
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
         public int idEstacionamento { get; set; }
         public int idVaga { get; set; }
         public string codigo { get; set; }
@@ -16,6 +19,5 @@ namespace Api.ParkingReserve.Models
         public bool cobertura { get; set; }
         public decimal largura { get; set; }
         public decimal comprimento { get; set; }
-
     }
 }

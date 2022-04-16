@@ -1,4 +1,5 @@
-﻿using Api.ParkingReserve.Interfaces;
+﻿using Api.ParkingReserve.Globais;
+using Api.ParkingReserve.Interfaces;
 using Api.ParkingReserve.Models;
 using MongoDB.Driver;
 using System;
@@ -17,6 +18,7 @@ namespace Api.ParkingReserve.Services
             var database = mongoClient.GetDatabase(settings.dataBaseName);
             _estacionamento = database.GetCollection<Estacionamento>(settings.estacionamentoCollectionsName);
         }
+               
 
         public Estacionamento Alterar(string id, Estacionamento est)
         {
@@ -27,6 +29,8 @@ namespace Api.ParkingReserve.Services
 
         public Estacionamento Cadastrar(Estacionamento est)
         {
+             est.situacao = Config.SITUACAO_ESTACIONAMENTO_DESABILITADO;
+            est.dataCredeciamento = DateTime.MaxValue;
             _estacionamento.InsertOne(est);
 
             return est;
@@ -45,6 +49,26 @@ namespace Api.ParkingReserve.Services
         public void Deletar(string id)
         {
             _estacionamento.DeleteOne(e => e.idEstacionamento == id);
+        }
+
+        public  void Desabilitar(string id)
+        {
+            this.MudarSituacao(id, Config.SITUACAO_ESTACIONAMENTO_DESABILITADO);
+        }
+
+        public void Habilitar(string id)
+        {
+            this.MudarSituacao(id, Config.SITUACAO_ESTACIONAMENTO_HABILITADO);
+        }
+
+        private void MudarSituacao(string id, string novaSituacao)
+        {
+            var filter = Builders<Estacionamento>.Filter.Eq("idEstacionamento", id);
+
+            var update = Builders<Estacionamento>.Update
+                .Set("situacao", novaSituacao);
+
+            _estacionamento.UpdateOne(filter, update);
         }
     }
 

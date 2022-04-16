@@ -12,12 +12,14 @@ namespace Api.ParkingReserve.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public int idEstacionamento { get; set; }
-        public int idVaga { get; set; }
+        public string idVaga { get; set; } = string.Empty;
+        public string idEstacionamento { get; set; }
+        public string nomeEstacionamento { get; set; }       
         public string codigo { get; set; }
         public string tipoVaga { get; set; }
         public bool cobertura { get; set; }
         public decimal largura { get; set; }
         public decimal comprimento { get; set; }
+        public string situacao { get; set; }
     }
 }

@@ -13,5 +13,7 @@ namespace Api.ParkingReserve.Interfaces
         Estacionamento Cadastrar(Estacionamento est);
         Estacionamento Alterar(string id, Estacionamento est);
         void Deletar(string id);
+        void Desabilitar(string id);
+        void Habilitar(string id);
     }
 }

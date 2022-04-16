@@ -52,8 +52,8 @@ namespace Api.ParkingReserve
              new MongoClient(Configuration.GetValue<string>("ParkingReserveDatabaseSettings:ConnectionString")));
 
             services.AddScoped<IEstacionamentoService, EstacionamentoService>();
+            services.AddScoped<IVagaService, VagaService>();
 
-            ///services.AddControllersWithViews().
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

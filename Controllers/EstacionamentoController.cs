@@ -17,7 +17,7 @@ namespace Api.ParkingReserve.Controllers
     [ApiController]
     public class EstacionamentoController : ControllerBase
     {
-        public IEstacionamentoService _estacionamentoService { get; }
+        private readonly IEstacionamentoService _estacionamentoService;
 
         public EstacionamentoController(IEstacionamentoService estacionamentoService)
         {
@@ -78,6 +78,37 @@ namespace Api.ParkingReserve.Controllers
 
             return Ok($"Estacionamento {id} Deletado!");
         }
+
+        [HttpPut("Habilitar/{id}")]
+        public ActionResult Habilitar(string id)
+        {
+            var existe = _estacionamentoService.Consultar(id);
+
+            if (existe == null)
+            {
+                return NotFound($"Estacionamento id: {id} não encontrado");
+            }
+
+            _estacionamentoService.Habilitar(id);
+
+            return Ok($"Estacionamento {id} Habilitado!");
+        }
+
+        [HttpPut("Desabilitar/{id}")]
+        public ActionResult Desabilitar(string id)
+        {
+            var existe = _estacionamentoService.Consultar(id);
+
+            if (existe == null)
+            {
+                return NotFound($"Estacionamento id: {id} não encontrado");
+            }
+
+            _estacionamentoService.Desabilitar(id);
+
+            return Ok($"Estacionamento {id} Desabilitado!");
+        }
+
 
     }
 }

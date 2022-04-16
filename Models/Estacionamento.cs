@@ -17,7 +17,7 @@ namespace Api.ParkingReserve.Models
         public string email { get; set; }
         public string telefone { get; set; }
         public string cnpj { get; set; }
-        public string nome { get; set; }
+        public string nomeEstacionamento { get; set; }
         public string cep { get; set; }
         public string idUsuario { get; set; }
         public bool manobrista { get; set; }

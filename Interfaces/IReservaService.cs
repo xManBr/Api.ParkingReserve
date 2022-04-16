@@ -6,13 +6,12 @@ using Api.ParkingReserve.Models;
 
 namespace Api.ParkingReserve.Interfaces
 {
-    public interface IVagaService
+    public interface IReservaService
     {
-        List<Vaga> Consultar();
-        List<Vaga> ConsultarVagaSemReserva(string idEstacionamento);
-        Vaga Consultar(string id);
-        Vaga Cadastrar(Vaga est);
-        Vaga Alterar(string id, Vaga est);
+        List<Reserva> Consultar();
+        Reserva Consultar(string id);
+        Reserva Cadastrar(Reserva est);
+        Reserva Alterar(string id, Reserva est);
         void Deletar(string id);
         void Desabilitar(string id);
         void Habilitar(string id);

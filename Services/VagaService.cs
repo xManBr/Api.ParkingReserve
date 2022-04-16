@@ -20,16 +20,16 @@ namespace Api.ParkingReserve.Services
         }
 
 
-        public Vaga Alterar(string id, Vaga est)
+        public Vaga Alterar(string id, Vaga vaga)
         {
-            _vaga.ReplaceOne(e => e.idVaga == id, est);
+            _vaga.ReplaceOne(e => e.idVaga == id, vaga);
 
-            return est;
+            return vaga;
         }
 
         public Vaga Cadastrar(Vaga vaga)
         {
-            vaga.situacao = Config.SITUACAO_ESTACIONAMENTO_DESABILITADO;
+            vaga.situacao = Config.SITUACAO_VAGA_DESABILITADA;
             _vaga.InsertOne(vaga);
 
             return vaga;
@@ -69,6 +69,12 @@ namespace Api.ParkingReserve.Services
 
             _vaga.UpdateOne(filter, update);
         }
+
+        public List<Vaga> ConsultarVagaSemReserva(string idEstacionamento)
+        {
+            return _vaga.Find(e => e.idEstacionamento == idEstacionamento && e.reservaExpressa == null).ToList();
+        }
     }
 
 }
+

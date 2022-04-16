@@ -34,15 +34,15 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Vaga> Post([FromBody] Vaga estacionamento)
+        public ActionResult<Vaga> Post([FromBody] Vaga vaga)
         {
-            _vagaService.Cadastrar(estacionamento);
+            _vagaService.Cadastrar(vaga);
 
-            return CreatedAtAction(nameof(Get), new { id = estacionamento.idEstacionamento }, estacionamento);
+            return CreatedAtAction(nameof(Get), new { id = vaga.idVaga }, vaga);
         }
 
         [HttpPut("{id}")]
-        public ActionResult Put(string id, [FromBody] Vaga estacionamento)
+        public ActionResult Put(string id, [FromBody] Vaga vaga)
         {
             var existe = _vagaService.Consultar(id);
 
@@ -51,7 +51,7 @@ namespace Api.ParkingReserve.Controllers
                 return NotFound($"Vaga id: {id} não encontrado");
             }
 
-            _vagaService.Alterar(id, estacionamento);
+            _vagaService.Alterar(id, vaga);
 
             return NoContent();
         }
@@ -100,5 +100,19 @@ namespace Api.ParkingReserve.Controllers
 
             return Ok($"Vaga {id} Desabilitado!");
         }
+
+        [HttpGet("ConsultarVagaSemReserva/{idEstacionamento}")]
+        public ActionResult<List<Vaga>> ConsultarVagaSemReserva(string idEstacionamento)
+        {;
+            var vagas = _vagaService.ConsultarVagaSemReserva(idEstacionamento);
+
+            if (vagas.Count == 0)
+            {
+                return NotFound($"Não há mais vagas disponíveis para reserva no estationamento id : {idEstacionamento}");
+            }
+            return vagas;
+        }
+
+
     }
 }

@@ -8,10 +8,11 @@ namespace Api.ParkingReserve.Interfaces
 {
     public interface IParkingReserveDatabaseSettings
     {
-        string estacionamentoCollectionsName { get; set;}
-        string vagaCollectionsName { get; set; }
-        
         string connectionString { get; set; }
         string dataBaseName { get; set; }
+
+        string estacionamentoCollectionsName { get; set;}
+        string vagaCollectionsName { get; set; }
+        string reservaCollectionsName { get; set; }
     }
 }

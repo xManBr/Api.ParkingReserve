@@ -27,5 +27,8 @@ namespace Api.ParkingReserve.Models
         public string situacao { get; set; }
         public DateTime dataCadastro { get; set; }
         public DateTime dataCredeciamento { get; set; }
+        public int vagasTotal { get; set; }
+        public int vagasOcupadas { get; set; }
+        public int vagasReservadas { get; set; }
     }
 }

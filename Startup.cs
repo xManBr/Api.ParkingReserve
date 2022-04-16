@@ -53,6 +53,7 @@ namespace Api.ParkingReserve
 
             services.AddScoped<IEstacionamentoService, EstacionamentoService>();
             services.AddScoped<IVagaService, VagaService>();
+            services.AddScoped<IReservaService, ReservaService>();            
 
 
             services.AddControllers();

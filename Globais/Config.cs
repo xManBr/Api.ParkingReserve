@@ -8,11 +8,20 @@ namespace Api.ParkingReserve.Globais
     public class Config
     {
 
-        public static string SITUACAO_VAGA_DESABILITADA = "Desablitada";
-        public static string SITUACAO_VAGA_HABILITADA = "Habilitada";
+        private const string habilitado = "Habilitado";
+        private const string habilitada = "Habilitada";
+
+        private const string desabilitado = "Desabilitado";
+        private const string desabilitada = "Desabilitada";
+
+        public static string SITUACAO_RESERVA_DESABILITADA = desabilitada;
+        public static string SITUACAO_RESERVA_HABILITADA = habilitada;
+
+        public static string SITUACAO_VAGA_DESABILITADA = desabilitada;
+        public static string SITUACAO_VAGA_HABILITADA = habilitada;
 
 
-        public static string SITUACAO_ESTACIONAMENTO_DESABILITADO = "Desablitado";
-        public static string SITUACAO_ESTACIONAMENTO_HABILITADO = "Habilitado";
+        public static string SITUACAO_ESTACIONAMENTO_DESABILITADO = desabilitado;
+        public static string SITUACAO_ESTACIONAMENTO_HABILITADO = habilitado;
     }
 }

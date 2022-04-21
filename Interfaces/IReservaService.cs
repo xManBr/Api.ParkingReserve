@@ -10,8 +10,8 @@ namespace Api.ParkingReserve.Interfaces
     {
         List<Reserva> Consultar();
         Reserva Consultar(string id);
-        Reserva Cadastrar(Reserva est);
-        Reserva Alterar(string id, Reserva est);
+        Reserva Cadastrar(Reserva rserva);
+        Reserva Alterar(string id, Reserva reserva);
         void Deletar(string id);
         void Desabilitar(string id);
         void Habilitar(string id);

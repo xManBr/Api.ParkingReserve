@@ -11,8 +11,8 @@ namespace Api.ParkingReserve.Interfaces
         List<Vaga> Consultar();
         List<Vaga> ConsultarVagaSemReserva(string idEstacionamento);
         Vaga Consultar(string id);
-        Vaga Cadastrar(Vaga est);
-        Vaga Alterar(string id, Vaga est);
+        Vaga Cadastrar(Vaga vaga);
+        Vaga Alterar(string id, Vaga vaga);
         void Deletar(string id);
         void Desabilitar(string id);
         void Habilitar(string id);

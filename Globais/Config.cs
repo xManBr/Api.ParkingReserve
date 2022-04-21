@@ -23,5 +23,9 @@ namespace Api.ParkingReserve.Globais
 
         public static string SITUACAO_ESTACIONAMENTO_DESABILITADO = desabilitado;
         public static string SITUACAO_ESTACIONAMENTO_HABILITADO = habilitado;
+
+
+        public static string SITUACAO_USUARIO_DESABILITADO = desabilitado;
+        public static string SITUACAO_USUARIO_HABILITADO = habilitado;
     }
 }

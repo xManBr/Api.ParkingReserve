@@ -29,6 +29,7 @@ namespace Api.ParkingReserve.Services
 
         public Vaga Cadastrar(Vaga vaga)
         {
+            vaga.idVaga = string.Empty;
             vaga.situacao = Config.SITUACAO_VAGA_DESABILITADA;
             _vaga.InsertOne(vaga);
 

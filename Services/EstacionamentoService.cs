@@ -29,6 +29,7 @@ namespace Api.ParkingReserve.Services
 
         public Estacionamento Cadastrar(Estacionamento est)
         {
+            est.idEstacionamento = string.Empty;
              est.situacao = Config.SITUACAO_ESTACIONAMENTO_DESABILITADO;
             est.dataCredeciamento = DateTime.MaxValue;
             _estacionamento.InsertOne(est);

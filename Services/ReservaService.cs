@@ -38,6 +38,7 @@ namespace Api.ParkingReserve.Services
 
         public Reserva Cadastrar(Reserva reserva)
         {
+            reserva.idReserva = string.Empty;
             reserva.situacao = Config.SITUACAO_RESERVA_HABILITADA;
             _reserva.InsertOne(reserva);
 

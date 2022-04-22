@@ -100,13 +100,13 @@ namespace Api.ParkingReserve.Controllers
 
             return Ok($"Usuario {id} Desabilitado!");
         }
-
-        [HttpGet("Login")]
-        public ActionResult Login(string email, string senha)
+                    
+        [HttpPost("Login")]
+        public ActionResult<dynamic> Login(string email, string senha)
         {
             var autenticacao = _usuarioService.Login(email, senha);
 
-            return Ok(autenticacao);
+            return autenticacao;
         }
 
     }

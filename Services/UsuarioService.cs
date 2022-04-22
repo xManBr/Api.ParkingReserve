@@ -100,7 +100,7 @@ namespace Api.ParkingReserve.Services
                 }
                 else
                 {
-                    return _tokenService.GerarToken(email, usuario.idUsuario);
+                    return _tokenService.GerarToken(email, usuario.idUsuario, usuario.perfilCondutor, usuario.perfilEstacionamento);
                 }
             }
         }

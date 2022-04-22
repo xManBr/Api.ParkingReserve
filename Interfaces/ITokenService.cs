@@ -7,6 +7,6 @@ namespace Api.ParkingReserve.Interfaces
 {
     public interface ITokenService
     {
-        string GerarToken(string email, string idUsuario);
+        string GerarToken(string email, string idUsuario, bool condutor, bool estacionamento);
     }
 }

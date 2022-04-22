@@ -14,12 +14,12 @@ namespace Api.ParkingReserve.Models
         public string idUsuario { get; set; }
         public string email { get; set; }
         public string telefone { get; set; }
-        public string senha { get; set; }
-        public string lembreteSenha { get; set; }
-        public DateTime dataCadastro { get; set; }
+        public string situacao { get; set; }
         public bool emailConfirmado { get; set; }
         public bool perfilCondutor { get; set; }
         public bool perfilEstacionamento { get; set; }
-        public string situacao { get; set; }
+        public string senha { get; set; }
+        public string lembreteSenha { get; set; }
+        public DateTime dataCadastro { get; set; }
     }
 }

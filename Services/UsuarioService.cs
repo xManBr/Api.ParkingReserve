@@ -1,6 +1,7 @@
 ﻿using Api.ParkingReserve.Globais;
 using Api.ParkingReserve.Interfaces;
 using Api.ParkingReserve.Models;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -80,27 +81,36 @@ namespace Api.ParkingReserve.Services
             _usuario.UpdateOne(filter, update);
         }
 
-        public string Login(string email, string senha)
+        public ActionResult<dynamic> Login(string email, string senha)
         {
             var usuario = _usuario.Find(e => e.email == email).FirstOrDefault();
 
             if (usuario == null)
             {
-                return $"Usuário {email} não nadastrado.";
+                return new { message = $"Usuário {email} não nadastrado." };
             }
             if (usuario.situacao == Config.SITUACAO_USUARIO_DESABILITADO)
             {
-                return $"Usuário {email} id {usuario.idUsuario} está desabilitado.";
+                return new { message = $"Usuário {email} id {usuario.idUsuario} está desabilitado." };
             }
             else
             {
                 if (usuario.senha != senha)
                 {
-                    return "Usuário e senha não Conferem.";
+                    return new { message = "Usuário e senha não Conferem." };
                 }
                 else
                 {
-                    return _tokenService.GerarToken(email, usuario.idUsuario, usuario.perfilCondutor, usuario.perfilEstacionamento);
+                    var token = _tokenService.GerarToken(email, usuario.idUsuario, usuario.perfilCondutor, usuario.perfilEstacionamento);
+                    usuario.senha = string.Empty;
+                    usuario.lembreteSenha = string.Empty;
+
+                    return new Autenticacao
+                    {
+                        message = "OK",
+                        usuario = usuario,
+                        token = token
+                    };
                 }
             }
         }

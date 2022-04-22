@@ -1,4 +1,5 @@
 ﻿using Api.ParkingReserve.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace Api.ParkingReserve.Interfaces
         void Desabilitar(string id);
         void Habilitar(string id);
 
-        string Login(string email, string senha);
+        ActionResult<dynamic> Login(string email, string senha);
 
     }
 }

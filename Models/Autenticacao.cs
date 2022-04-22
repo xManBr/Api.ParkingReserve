@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Api.ParkingReserve.Models
 {
-    public class Autenticacao : Login
+    public class Autenticacao
     {
         public string message { get; set; }
         public Usuario usuario { get; set; }

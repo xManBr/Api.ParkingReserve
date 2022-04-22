@@ -2,6 +2,8 @@
 using Api.ParkingReserve.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Api.ParkingReserve.Globais;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.ParkingReserve.Controllers
 {
@@ -17,12 +19,14 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult<List<Vaga>> Get()
         {
             return _vagaService.Consultar();
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<Vaga> Get(string id)
         {
             var est = _vagaService.Consultar(id);
@@ -34,6 +38,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult<Vaga> Post([FromBody] Vaga vaga)
         {
             _vagaService.Cadastrar(vaga);
@@ -42,6 +47,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult Put(string id, [FromBody] Vaga vaga)
         {
             var existe = _vagaService.Consultar(id);
@@ -57,6 +63,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult Delete(string id)
         {
             var existe = _vagaService.Consultar(id);
@@ -72,6 +79,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpPut("Habilitar/{id}")]
+        [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult Habilitar(string id)
         {
             var existe = _vagaService.Consultar(id);
@@ -87,6 +95,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpPut("Desabilitar/{id}")]
+        [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult Desabilitar(string id)
         {
             var existe = _vagaService.Consultar(id);
@@ -102,6 +111,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpGet("ConsultarVagaSemReserva/{idEstacionamento}")]
+        [AllowAnonymous]
         public ActionResult<List<Vaga>> ConsultarVagaSemReserva(string idEstacionamento)
         {;
             var vagas = _vagaService.ConsultarVagaSemReserva(idEstacionamento);

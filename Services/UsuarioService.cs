@@ -14,12 +14,14 @@ namespace Api.ParkingReserve.Services
     {
         private readonly IMongoCollection<Usuario> _usuario;
         private readonly ISecurityService _securityService;
+        private readonly string _emailDosAdministradores;
 
         public UsuarioService(IParkingReserveDatabaseSettings settings, IMongoClient mongoClient, ISecurityService securityService)
         {
             var database = mongoClient.GetDatabase(settings.dataBaseName);
             _usuario = database.GetCollection<Usuario>(settings.usuarioCollectionsName);
             _securityService = securityService;
+            _emailDosAdministradores = settings.emailDosAdministradores;
         }
 
         public Usuario Alterar(string id, Usuario usuario)
@@ -27,7 +29,6 @@ namespace Api.ParkingReserve.Services
             var filter = Builders<Usuario>.Filter.Eq("idUsuario", id);
 
             var update = Builders<Usuario>.Update
-                        .Set("email", usuario.email)
                         .Set("telefone", usuario.telefone)
                         .Set("perfilCondutor", usuario.perfilCondutor)
                         .Set("perfilEstacionamento", usuario.perfilEstacionamento);
@@ -37,14 +38,26 @@ namespace Api.ParkingReserve.Services
             return usuario;
         }
 
-        public Usuario Cadastrar(Usuario usuario)
+        public ActionResult<dynamic> Cadastrar(Usuario usuario)
         {
-            usuario.idUsuario = string.Empty;
-            usuario.situacao = Config.SITUACAO_USUARIO_HABILITADO;
-            usuario.senha = _securityService.Emcritar(usuario.senha);
-            _usuario.InsertOne(usuario);
-
-            return usuario;
+            var filter = _usuario.Find(x => x.email == usuario.email.Trim()).FirstOrDefault();
+            if (filter != null)
+            {
+                return new { message = $"E-mail: {usuario.email} já foi cadastro no sistema!" };
+            }
+            else
+            {
+                usuario.idUsuario = string.Empty;
+                usuario.situacao = Config.SITUACAO_USUARIO_HABILITADO;
+                usuario.senha = _securityService.Emcritar(usuario.senha);
+                var adms = _emailDosAdministradores.Split(' ').ToList();
+                if (adms.Contains(usuario.email))
+                {
+                    usuario.perfilAdministrador = true;
+                }
+                _usuario.InsertOne(usuario);
+                return usuario;
+            }
         }
 
         public List<Usuario> Consultar()
@@ -110,7 +123,7 @@ namespace Api.ParkingReserve.Services
                 }
                 else
                 {
-                    var token = _securityService.GerarToken(email, usuario.idUsuario, usuario.perfilCondutor, usuario.perfilEstacionamento);
+                    var token = _securityService.GerarToken(email, usuario.idUsuario, usuario.perfilCondutor, usuario.perfilEstacionamento, usuario.perfilAdministrador);
                     usuario.senha = "******";
                     usuario.lembreteSenha = "******";
 
@@ -118,7 +131,7 @@ namespace Api.ParkingReserve.Services
                     {
                         message = "OK",
                         usuario = usuario,
-                        token = token
+                        token = "Bearer " + token
                     };
                 }
             }

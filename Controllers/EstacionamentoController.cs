@@ -1,5 +1,7 @@
-﻿using Api.ParkingReserve.Interfaces;
+﻿using Api.ParkingReserve.Globais;
+using Api.ParkingReserve.Interfaces;
 using Api.ParkingReserve.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -25,12 +27,14 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult<List<Estacionamento>> Get()
         {
             return _estacionamentoService.Consultar();
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<Estacionamento> Get(string id)
         {
             var est = _estacionamentoService.Consultar(id);
@@ -42,6 +46,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult<Estacionamento> Post([FromBody] Estacionamento estacionamento)
         {
             _estacionamentoService.Cadastrar(estacionamento);
@@ -50,6 +55,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult Put(string id, [FromBody] Estacionamento estacionamento)
         {
             var existe = _estacionamentoService.Consultar(id);
@@ -65,6 +71,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult Delete(string id)
         {
             var existe = _estacionamentoService.Consultar(id);
@@ -80,6 +87,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpPut("Habilitar/{id}")]
+        [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult Habilitar(string id)
         {
             var existe = _estacionamentoService.Consultar(id);
@@ -95,6 +103,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpPut("Desabilitar/{id}")]
+        [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult Desabilitar(string id)
         {
             var existe = _estacionamentoService.Consultar(id);

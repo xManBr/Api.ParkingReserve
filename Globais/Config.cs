@@ -8,6 +8,7 @@ namespace Api.ParkingReserve.Globais
     public class Config
     {
 
+
         private const string habilitado = "Habilitado";
         private const string habilitada = "Habilitada";
 
@@ -27,5 +28,10 @@ namespace Api.ParkingReserve.Globais
 
         public static string SITUACAO_USUARIO_DESABILITADO = desabilitado;
         public static string SITUACAO_USUARIO_HABILITADO = habilitado;
+
+        public const string ROLE_ESTACIONAMENTO = "estacionamento";
+        public const string ROLE_CONDUTOR = "condutor";
+        public const string ROLE_ADMINISTRADOR = "administrador";
+
     }
 }

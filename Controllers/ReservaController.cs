@@ -2,6 +2,8 @@
 using Api.ParkingReserve.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Api.ParkingReserve.Globais;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.ParkingReserve.Controllers
 {
@@ -17,12 +19,14 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult<List<Reserva>> Get()
         {
             return _reservaService.Consultar();
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<Reserva> Get(string id)
         {
             var est = _reservaService.Consultar(id);
@@ -34,6 +38,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Config.ROLE_CONDUTOR)]
         public ActionResult<Reserva> Post([FromBody] Reserva reserva)
         {
             _reservaService.Cadastrar(reserva);
@@ -42,6 +47,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = Config.ROLE_CONDUTOR)]
         public ActionResult Put(string id, [FromBody] Reserva reserva)
         {
             var existe = _reservaService.Consultar(id);
@@ -57,6 +63,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Config.ROLE_CONDUTOR)]
         public ActionResult Delete(string id)
         {
             var existe = _reservaService.Consultar(id);
@@ -72,6 +79,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpPut("Habilitar/{id}")]
+        [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult Habilitar(string id)
         {
             var existe = _reservaService.Consultar(id);
@@ -87,6 +95,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpPut("Desabilitar/{id}")]
+        [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult Desabilitar(string id)
         {
             var existe = _reservaService.Consultar(id);

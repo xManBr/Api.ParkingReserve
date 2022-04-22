@@ -11,7 +11,7 @@ namespace Api.ParkingReserve.Interfaces
     {
         List<Usuario> Consultar();
         Usuario Consultar(string id);
-        Usuario Cadastrar(Usuario usuario);
+        ActionResult<dynamic> Cadastrar(Usuario usuario);
         Usuario Alterar(string id, Usuario usuario);
         void Deletar(string id);
         void Desabilitar(string id);

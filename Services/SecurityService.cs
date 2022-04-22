@@ -18,10 +18,11 @@ namespace Api.ParkingReserve.Services
         {
             _settings = settings;
         }
-        public string GerarToken(string email, string idUsuario, bool condutor, bool estacionamento)
+        public string GerarToken(string email, string idUsuario, bool condutor, bool estacionamento, bool administrador)
         {
             var clams = new List<Claim>();
             clams.Add(new Claim(ClaimTypes.Email, email));
+            clams.Add(new Claim(ClaimTypes.Name, idUsuario));
             clams.Add(new Claim(ClaimTypes.NameIdentifier, idUsuario));
             if (condutor)
             {
@@ -30,6 +31,10 @@ namespace Api.ParkingReserve.Services
             if (estacionamento)
             {
                 clams.Add(new Claim(ClaimTypes.Role, "estacionamento"));
+            }
+            if (administrador)
+            {
+                clams.Add(new Claim(ClaimTypes.Role, "administrador"));
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();

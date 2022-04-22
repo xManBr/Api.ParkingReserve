@@ -1,5 +1,7 @@
-﻿using Api.ParkingReserve.Interfaces;
+﻿using Api.ParkingReserve.Globais;
+using Api.ParkingReserve.Interfaces;
 using Api.ParkingReserve.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -17,12 +19,16 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpGet]
+        [Authorize]
+        [Authorize(Roles = Config.ROLE_ADMINISTRADOR)]
         public ActionResult<List<Usuario>> Get()
         {
             return _usuarioService.Consultar();
         }
 
         [HttpGet("{id}")]
+        [Authorize]
+        [Authorize(Roles = Config.ROLE_ADMINISTRADOR)]
         public ActionResult<Usuario> Get(string id)
         {
             var est = _usuarioService.Consultar(id);
@@ -34,14 +40,16 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Usuario> Post([FromBody] Usuario usuario)
+        [AllowAnonymous]
+        public ActionResult<dynamic> Post([FromBody] Usuario usuario)
         {
             _usuarioService.Cadastrar(usuario);
 
-            return CreatedAtAction(nameof(Get), new { id = usuario.idUsuario }, usuario);
+            return _usuarioService.Cadastrar(usuario);
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public ActionResult Put(string id, [FromBody] Usuario usuario)
         {
             var existe = _usuarioService.Consultar(id);
@@ -57,6 +65,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Config.ROLE_ADMINISTRADOR)]
         public ActionResult Delete(string id)
         {
             var existe = _usuarioService.Consultar(id);
@@ -72,6 +81,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpPut("Habilitar/{id}")]
+        [Authorize(Roles = Config.ROLE_ADMINISTRADOR)]
         public ActionResult Habilitar(string id)
         {
             var existe = _usuarioService.Consultar(id);
@@ -87,6 +97,7 @@ namespace Api.ParkingReserve.Controllers
         }
 
         [HttpPut("Desabilitar/{id}")]
+        [Authorize(Roles = Config.ROLE_ADMINISTRADOR)]
         public ActionResult Desabilitar(string id)
         {
             var existe = _usuarioService.Consultar(id);
@@ -102,6 +113,7 @@ namespace Api.ParkingReserve.Controllers
         }
                     
         [HttpPost("Login")]
+        [AllowAnonymous]
         public ActionResult<dynamic> Login([FromBody] Login login)
         {
             var autenticacao = _usuarioService.Login(login.email, login.senha);

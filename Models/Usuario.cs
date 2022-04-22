@@ -18,6 +18,7 @@ namespace Api.ParkingReserve.Models
         public bool emailConfirmado { get; set; }
         public bool perfilCondutor { get; set; }
         public bool perfilEstacionamento { get; set; }
+        public bool perfilAdministrador { get; set; }        
         public string senha { get; set; }
         public string lembreteSenha { get; set; }
         public DateTime dataCadastro { get; set; }

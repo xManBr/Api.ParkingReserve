@@ -18,6 +18,13 @@ using MongoDB.Driver;
 using Api.ParkingReserve.Services;
 using Api.ParkingReserve.Interfaces;
 
+using System.Text;
+
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 //using Newtonsoft.Json.Serialization;
 
@@ -58,9 +65,55 @@ namespace Api.ParkingReserve
             services.AddScoped<ISecurityService, SecurityService>();
 
             services.AddControllers();
+
+            var strKey = Configuration.GetValue<string>("ParkingReserveDatabaseSettings:FraseSecreta");
+            var key = Encoding.ASCII.GetBytes(strKey);
+            services.AddAuthentication(p =>
+            {
+                p.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                p.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(w =>
+                {
+                    w.RequireHttpsMetadata = false;
+                    w.SaveToken = true;
+                    w.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api.ParkingReserve", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "Insira o token JWT desta maneira: Bearer {seu token}",
+                    Name = "Authorization",
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
             });
         }
 
@@ -81,6 +134,7 @@ namespace Api.ParkingReserve
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

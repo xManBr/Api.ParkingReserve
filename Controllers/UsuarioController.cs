@@ -43,8 +43,6 @@ namespace Api.ParkingReserve.Controllers
         [AllowAnonymous]
         public ActionResult<dynamic> Post([FromBody] Usuario usuario)
         {
-            _usuarioService.Cadastrar(usuario);
-
             return _usuarioService.Cadastrar(usuario);
         }
 

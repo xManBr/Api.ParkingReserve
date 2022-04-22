@@ -63,10 +63,6 @@ namespace Api.ParkingReserve.Services
         public List<Usuario> Consultar()
         {
             var usuarios = _usuario.Find(e => true).ToList();
-            foreach (var usuario in usuarios)
-            {
-                usuario.lembreteSenha = "******";
-            }
 
             return usuarios;
         }

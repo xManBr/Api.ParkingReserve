@@ -49,6 +49,7 @@ namespace Api.ParkingReserve.Controllers
         [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult<Estacionamento> Post([FromBody] Estacionamento estacionamento)
         {
+            estacionamento.idUsuario = HttpContext.User.Identity.Name;
             _estacionamentoService.Cadastrar(estacionamento);
 
             return CreatedAtAction(nameof(Get), new { id = estacionamento.idEstacionamento }, estacionamento);
@@ -58,16 +59,24 @@ namespace Api.ParkingReserve.Controllers
         [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult Put(string id, [FromBody] Estacionamento estacionamento)
         {
-            var existe = _estacionamentoService.Consultar(id);
-
-            if (existe == null)
+            var idUsuarioCorrent = HttpContext.User.Identity.Name;
+            if (estacionamento.idUsuario != idUsuarioCorrent)
             {
-                return NotFound($"Estacionamento id: {id} não encontrado");
+                return NotFound($"O Estacionamento id: {id} não pertence ao usuário registrado(logado).");
             }
+            else
+            {
+                var existe = _estacionamentoService.Consultar(id);
 
-            _estacionamentoService.Alterar(id, estacionamento);
+                if (existe == null)
+                {
+                    return NotFound($"Estacionamento id: {id} não encontrado");
+                }
 
-            return NoContent();
+                _estacionamentoService.Alterar(id, estacionamento);
+
+                return NoContent();
+            }
         }
 
         [HttpDelete("{id}")]
@@ -81,9 +90,17 @@ namespace Api.ParkingReserve.Controllers
                 return NotFound($"Estacionamento id: {id} não encontrado");
             }
 
-            _estacionamentoService.Deletar(id);
+            var idUsuarioCorrent = HttpContext.User.Identity.Name;
+            if (existe.idUsuario != idUsuarioCorrent)
+            {
+                return NotFound($"O Estacionamento id: {id} não pertence ao usuário registrado(logado).");
+            }
+            else
+            {
+                _estacionamentoService.Deletar(id);
 
-            return Ok($"Estacionamento {id} Deletado!");
+                return Ok($"Estacionamento {id} Deletado!");
+            }
         }
 
         [HttpPut("Habilitar/{id}")]
@@ -97,9 +114,17 @@ namespace Api.ParkingReserve.Controllers
                 return NotFound($"Estacionamento id: {id} não encontrado");
             }
 
-            _estacionamentoService.Habilitar(id);
+            var idUsuarioCorrent = HttpContext.User.Identity.Name;
+            if (existe.idUsuario != idUsuarioCorrent)
+            {
+                return NotFound($"O Estacionamento id: {id} não pertence ao usuário registrado(logado).");
+            }
+            else
+            {
+                _estacionamentoService.Habilitar(id);
 
-            return Ok($"Estacionamento {id} Habilitado!");
+                return Ok($"Estacionamento {id} Habilitado!");
+            }
         }
 
         [HttpPut("Desabilitar/{id}")]
@@ -112,12 +137,17 @@ namespace Api.ParkingReserve.Controllers
             {
                 return NotFound($"Estacionamento id: {id} não encontrado");
             }
+            var idUsuarioCorrent = HttpContext.User.Identity.Name;
+            if (existe.idUsuario != idUsuarioCorrent)
+            {
+                return NotFound($"O Estacionamento id: {id} não pertence ao usuário registrado(logado).");
+            }
+            else
+            {
+                _estacionamentoService.Desabilitar(id);
 
-            _estacionamentoService.Desabilitar(id);
-
-            return Ok($"Estacionamento {id} Desabilitado!");
+                return Ok($"Estacionamento {id} Desabilitado!");
+            }
         }
-
-
     }
 }

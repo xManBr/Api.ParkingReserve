@@ -13,13 +13,13 @@ namespace Api.ParkingReserve.Services
     public class UsuarioService : IUsuarioService
     {
         private readonly IMongoCollection<Usuario> _usuario;
-        private readonly ITokenService _tokenService;
+        private readonly ISecurityService _securityService;
 
-        public UsuarioService(IParkingReserveDatabaseSettings settings, IMongoClient mongoClient, ITokenService tokenService)
+        public UsuarioService(IParkingReserveDatabaseSettings settings, IMongoClient mongoClient, ISecurityService securityService)
         {
             var database = mongoClient.GetDatabase(settings.dataBaseName);
             _usuario = database.GetCollection<Usuario>(settings.usuarioCollectionsName);
-            _tokenService = tokenService;
+            _securityService = securityService;
         }
 
         public Usuario Alterar(string id, Usuario usuario)
@@ -41,6 +41,7 @@ namespace Api.ParkingReserve.Services
         {
             usuario.idUsuario = string.Empty;
             usuario.situacao = Config.SITUACAO_USUARIO_HABILITADO;
+            usuario.senha = _securityService.Emcritar(usuario.senha);
             _usuario.InsertOne(usuario);
 
             return usuario;
@@ -48,12 +49,20 @@ namespace Api.ParkingReserve.Services
 
         public List<Usuario> Consultar()
         {
-            return _usuario.Find(e => true).ToList();
+            var usuarios = _usuario.Find(e => true).ToList();
+            foreach (var usuario in usuarios)
+            {
+                usuario.lembreteSenha = "******";
+            }
+
+            return usuarios;
         }
 
         public Usuario Consultar(string id)
         {
-            return _usuario.Find(e => e.idUsuario == id).FirstOrDefault();
+            var usuario = _usuario.Find(e => e.idUsuario == id).FirstOrDefault();
+
+            return usuario;
         }
 
         public void Deletar(string id)
@@ -95,15 +104,15 @@ namespace Api.ParkingReserve.Services
             }
             else
             {
-                if (usuario.senha != senha)
+                if (usuario.senha != _securityService.Emcritar(senha))
                 {
                     return new { message = "Usuário e senha não Conferem." };
                 }
                 else
                 {
-                    var token = _tokenService.GerarToken(email, usuario.idUsuario, usuario.perfilCondutor, usuario.perfilEstacionamento);
-                    usuario.senha = string.Empty;
-                    usuario.lembreteSenha = string.Empty;
+                    var token = _securityService.GerarToken(email, usuario.idUsuario, usuario.perfilCondutor, usuario.perfilEstacionamento);
+                    usuario.senha = "******";
+                    usuario.lembreteSenha = "******";
 
                     return new Autenticacao
                     {

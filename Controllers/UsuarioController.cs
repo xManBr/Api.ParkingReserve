@@ -102,9 +102,9 @@ namespace Api.ParkingReserve.Controllers
         }
                     
         [HttpPost("Login")]
-        public ActionResult<dynamic> Login(string email, string senha)
+        public ActionResult<dynamic> Login([FromBody] Login login)
         {
-            var autenticacao = _usuarioService.Login(email, senha);
+            var autenticacao = _usuarioService.Login(login.email, login.senha);
 
             return autenticacao;
         }

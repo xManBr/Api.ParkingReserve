@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace Api.ParkingReserve.Interfaces
 {
-    public interface ITokenService
+    public interface ISecurityService
     {
         string GerarToken(string email, string idUsuario, bool condutor, bool estacionamento);
+        string Emcritar(string password);
     }
 }

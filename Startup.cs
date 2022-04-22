@@ -55,7 +55,7 @@ namespace Api.ParkingReserve
             services.AddScoped<IVagaService, VagaService>();
             services.AddScoped<IReservaService, ReservaService>();
             services.AddScoped<IUsuarioService, UsuarioService>();
-            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ISecurityService, SecurityService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

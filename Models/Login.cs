@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace Api.ParkingReserve.Models
 {
-    public class UsuarioBase
+    public class Login
     {
-
+        public string email { get; set; }
+        public string senha { get; set; }
     }
 }

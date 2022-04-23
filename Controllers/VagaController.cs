@@ -12,10 +12,12 @@ namespace Api.ParkingReserve.Controllers
     public class VagaController : ControllerBase
     {
         private readonly IVagaService _vagaService;
+        private IEstacionamentoService _estacionamentoService;
 
-        public VagaController(IVagaService vagaService)
+        public VagaController(IVagaService vagaService, IEstacionamentoService estacionamentoService)
         {
             _vagaService = vagaService;
+            _estacionamentoService = estacionamentoService;
         }
 
         [HttpGet]
@@ -32,7 +34,7 @@ namespace Api.ParkingReserve.Controllers
             var est = _vagaService.Consultar(id);
             if (est == null)
             {
-                return NotFound($"Vaga id: {id} não encontrado");
+                return NotFound($"Vaga id: {id} não encontrada");
             }
             return est;
         }
@@ -41,9 +43,24 @@ namespace Api.ParkingReserve.Controllers
         [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult<Vaga> Post([FromBody] Vaga vaga)
         {
-            _vagaService.Cadastrar(vaga);
+            if ((vaga.idEstacionamento == null) || (vaga.idEstacionamento == string.Empty))
+            {
+                return NotFound("É preciso definir a qual estacionamento a vaga pertence.");
+            }
+            else
+            {
+                var existeEstacionamnto = _estacionamentoService.Consultar(vaga.idEstacionamento);
+                if (existeEstacionamnto == null)
+                {
+                    return NotFound($"A Vaga está se referindo ao estacionamento id {vaga.idEstacionamento} que não exsite.");
+                }
+                else
+                {
+                    _vagaService.Cadastrar(vaga);
 
-            return CreatedAtAction(nameof(Get), new { id = vaga.idVaga }, vaga);
+                    return CreatedAtAction(nameof(Get), new { id = vaga.idVaga }, vaga);
+                }
+            }
         }
 
         [HttpPut("{id}")]
@@ -51,69 +68,135 @@ namespace Api.ParkingReserve.Controllers
         public ActionResult Put(string id, [FromBody] Vaga vaga)
         {
             var existe = _vagaService.Consultar(id);
-
             if (existe == null)
             {
-                return NotFound($"Vaga id: {id} não encontrado");
+                return NotFound($"Vaga id: {id} não encontrada");
             }
+            else
+            {
+                var existeEstacionamnto = _estacionamentoService.Consultar(vaga.idEstacionamento);
+                if (existeEstacionamnto == null)
+                {
+                    return NotFound($"A Vaga está se referindo ao estacionamento id {vaga.idEstacionamento} que não exsite.");
+                }
+                else
+                {
+                    var idUsuario = HttpContext.User.Identity.Name;
+                    if (existeEstacionamnto.idUsuario != idUsuario)
+                    {
+                        return NotFound($"A vaga id {id}, está associada ao estacionamento  id: {id} que não pertence ao usuário registrado(logado).");
+                    }
+                    else
+                    {
 
-            _vagaService.Alterar(id, vaga);
+                        _vagaService.Alterar(id, vaga);
 
-            return NoContent();
+                        return NoContent();
+                    }
+                }
+            }
         }
 
         [HttpDelete("{id}")]
         [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult Delete(string id)
         {
-            var existe = _vagaService.Consultar(id);
-
-            if (existe == null)
+            var vaga = _vagaService.Consultar(id);
+            if (vaga == null)
             {
-                return NotFound($"Vaga id: {id} não encontrado");
+                return NotFound($"Vaga id: {id} não encontrada");
             }
-
-            _vagaService.Deletar(id);
-
-            return Ok($"Vaga {id} Deletado!");
+            else
+            {
+                var existeEstacionamnto = _estacionamentoService.Consultar(vaga.idEstacionamento);
+                if (existeEstacionamnto == null)
+                {
+                    return NotFound($"A Vaga está se referindo ao estacionamento id {vaga.idEstacionamento} que não exsite.");
+                }
+                else
+                {
+                    var idUsuario = HttpContext.User.Identity.Name;
+                    if (existeEstacionamnto.idUsuario != idUsuario)
+                    {
+                        return NotFound($"A vaga id {id}, está associada ao estacionamento  id: {id} que não pertence ao usuário registrado(logado).");
+                    }
+                    else
+                    {
+                        _vagaService.Deletar(id);
+                        return Ok($"Vaga {id} Deletado!");
+                    }
+                }
+            }
         }
 
         [HttpPut("Habilitar/{id}")]
         [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult Habilitar(string id)
         {
-            var existe = _vagaService.Consultar(id);
-
-            if (existe == null)
+            var vaga = _vagaService.Consultar(id);
+            if (vaga == null)
             {
-                return NotFound($"Vaga id: {id} não encontrado");
+                return NotFound($"Vaga id: {id} não encontrada");
             }
-
-            _vagaService.Habilitar(id);
-
-            return Ok($"Vaga {id} Habilitado!");
+            else
+            {
+                var existeEstacionamnto = _estacionamentoService.Consultar(vaga.idEstacionamento);
+                if (existeEstacionamnto == null)
+                {
+                    return NotFound($"A Vaga está se referindo ao estacionamento id {vaga.idEstacionamento} que não exsite.");
+                }
+                else
+                {
+                    var idUsuario = HttpContext.User.Identity.Name;
+                    if (existeEstacionamnto.idUsuario != idUsuario)
+                    {
+                        return NotFound($"A vaga id {id}, está associada ao estacionamento  id: {id} que não pertence ao usuário registrado(logado).");
+                    }
+                    else
+                    {
+                        _vagaService.Habilitar(id);
+                        return Ok($"Vaga {id} Habilitada!");
+                    }
+                }
+            }
         }
 
         [HttpPut("Desabilitar/{id}")]
         [Authorize(Roles = Config.ROLE_ESTACIONAMENTO)]
         public ActionResult Desabilitar(string id)
         {
-            var existe = _vagaService.Consultar(id);
-
-            if (existe == null)
+            var vaga = _vagaService.Consultar(id);
+            if (vaga == null)
             {
-                return NotFound($"Vaga id: {id} não encontrado");
+                return NotFound($"Vaga id: {id} não encontrada");
             }
-
-            _vagaService.Desabilitar(id);
-
-            return Ok($"Vaga {id} Desabilitado!");
+            else
+            {
+                var existeEstacionamnto = _estacionamentoService.Consultar(vaga.idEstacionamento);
+                if (existeEstacionamnto == null)
+                {
+                    return NotFound($"A Vaga está se referindo ao estacionamento id {vaga.idEstacionamento} que não exsite.");
+                }
+                else
+                {
+                    var idUsuario = HttpContext.User.Identity.Name;
+                    if (existeEstacionamnto.idUsuario != idUsuario)
+                    {
+                        return NotFound($"A vaga id {id}, está associada ao estacionamento  id: {id} que não pertence ao usuário registrado(logado).");
+                    }
+                    else
+                    {
+                        _vagaService.Desabilitar(id);
+                        return Ok($"Vaga {id} Desabilitado!");
+                    }
+                }
+            }
         }
 
         [HttpGet("ConsultarVagaSemReserva/{idEstacionamento}")]
         [AllowAnonymous]
         public ActionResult<List<Vaga>> ConsultarVagaSemReserva(string idEstacionamento)
-        {;
+        {
             var vagas = _vagaService.ConsultarVagaSemReserva(idEstacionamento);
 
             if (vagas.Count == 0)
@@ -122,7 +205,5 @@ namespace Api.ParkingReserve.Controllers
             }
             return vagas;
         }
-
-
     }
 }

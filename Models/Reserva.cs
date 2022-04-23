@@ -22,6 +22,7 @@ namespace Api.ParkingReserve.Models
         public string idVaga { get; set; }
         public string idCondutor { get; set; }
         public string idVeiculo { get; set; }
+        public string idUsuario { get; set; }
         public string situacao { get; set; }
         public ReservaExpressa reservaExpressa { get; set; }
     }

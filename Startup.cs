@@ -92,7 +92,7 @@ namespace Api.ParkingReserve
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "Insira o token JWT desta maneira: Bearer {seu token}",
+                    Description = "Insira o token JWT da forma seguinte: Bearer {seu token}",
                     Name = "Authorization",
                     Scheme = "Bearer",
                     BearerFormat = "JWT",

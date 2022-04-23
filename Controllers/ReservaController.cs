@@ -74,7 +74,7 @@ namespace Api.ParkingReserve.Controllers
                     var idUsuario = HttpContext.User.Identity.Name;
                     if ((reserva.idUsuario != idUsuarioCorrent) && (existeEstacionamnto.idUsuario != idUsuario))
                     {
-                        return NotFound($"Somente o usuário que efetuou a reserve ou o estacionamento, dono da vaga - podem alterar a reserva.).");
+                        return NotFound($"Somente o usuário que efetuou a reserve ou o estacionamento, dono da vaga - podem alterar a reserva.");
                     }
                     else
                     {
@@ -107,7 +107,7 @@ namespace Api.ParkingReserve.Controllers
                     var idUsuario = HttpContext.User.Identity.Name;
                     if ((reserva.idUsuario != idUsuarioCorrent) && (existeEstacionamnto.idUsuario != idUsuario))
                     {
-                        return NotFound($"Somente o usuário que efetuou a reserve ou o estacionamento, dono da vaga - podem apagar a reserva.).");
+                        return NotFound($"Somente o usuário que efetuou a reserve ou o estacionamento, dono da vaga - podem apagar a reserva.");
                     }
                     else
                     {
@@ -140,7 +140,7 @@ namespace Api.ParkingReserve.Controllers
                     var idUsuario = HttpContext.User.Identity.Name;
                     if ((reserva.idUsuario != idUsuarioCorrent) && (existeEstacionamnto.idUsuario != idUsuario))
                     {
-                        return NotFound($"Somente o usuário que efetuou a reserve ou o estacionamento, dono da vaga - podem habilitar a reserva.).");
+                        return NotFound($"Somente o usuário que efetuou a reserve ou o estacionamento, dono da vaga - podem habilitar a reserva.");
                     }
                     else
                     {
@@ -174,7 +174,7 @@ namespace Api.ParkingReserve.Controllers
                     var idUsuario = HttpContext.User.Identity.Name;
                     if ((reserva.idUsuario != idUsuarioCorrent) && (existeEstacionamnto.idUsuario != idUsuario))
                     {
-                        return NotFound($"Somente o usuário que efetuou a reserve ou o estacionamento, dono da vaga - podem desabilitar a reserva.).");
+                        return NotFound($"Somente o usuário que efetuou a reserve ou o estacionamento, dono da vaga - podem desabilitar a reserva.");
                     }
                     else
                     {

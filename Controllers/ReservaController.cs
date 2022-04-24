@@ -47,9 +47,20 @@ namespace Api.ParkingReserve.Controllers
         {
             var idUsuarioCorrent = HttpContext.User.Identity.Name;
             reserva.idUsuario = idUsuarioCorrent;
-            _reservaService.Cadastrar(reserva);
-
-            return CreatedAtAction(nameof(Get), new { id = reserva.idReserva }, reserva);
+            var vaga = _vagaService.Consultar(reserva.idVaga);
+            if (vaga == null)
+            {
+                return NotFound($"Vaga id: {reserva.idVaga} não encontrada.");
+            }
+            else if (vaga.situacao == Config.SITUACAO_VAGA_DESABILITADA)
+            {
+                return NotFound($"Vaga id: {reserva.idVaga} não Habilitada.");
+            }
+            else
+            {
+                _reservaService.Cadastrar(reserva);
+                return CreatedAtAction(nameof(Get), new { id = reserva.idReserva }, reserva);
+            }           
         }
 
         [HttpPut("{id}")]

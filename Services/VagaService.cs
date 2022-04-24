@@ -31,6 +31,7 @@ namespace Api.ParkingReserve.Services
         {
             vaga.idVaga = string.Empty;
             vaga.situacao = Config.SITUACAO_VAGA_DESABILITADA;
+            vaga.reservaExpressa = null;
             _vaga.InsertOne(vaga);
 
             return vaga;
@@ -73,7 +74,7 @@ namespace Api.ParkingReserve.Services
 
         public List<Vaga> ConsultarVagaSemReserva(string idEstacionamento)
         {
-            return _vaga.Find(e => e.idEstacionamento == idEstacionamento && e.reservaExpressa == null).ToList();
+            return _vaga.Find(e => (e.idEstacionamento == idEstacionamento) && (e.situacao == Config.SITUACAO_VAGA_HABILITADA) &&  (e.reservaExpressa == null)).ToList();
         }
     }
 

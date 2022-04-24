@@ -201,7 +201,7 @@ namespace Api.ParkingReserve.Controllers
 
             if (vagas.Count == 0)
             {
-                return NotFound($"Não há mais vagas disponíveis para reserva no estationamento id : {idEstacionamento}");
+                return NotFound($"Não há mais vagas disponíveis/habilitidas para reserva no estationamento id : {idEstacionamento}");
             }
             return vagas;
         }

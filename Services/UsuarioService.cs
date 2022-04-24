@@ -109,7 +109,7 @@ namespace Api.ParkingReserve.Services
             }
             if (usuario.situacao == Config.SITUACAO_USUARIO_DESABILITADO)
             {
-                return new { message = $"Usuário {email} id {usuario.idUsuario} está desabilitado." };
+                return new { message = $"Usuário {email} id {usuario.idUsuario} está desabilitado - entre em contato com o administrador." };
             }
             else
             {
